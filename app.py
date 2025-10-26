@@ -6,8 +6,7 @@ try:
 except Exception:
     import pymysql
     pymysql.install_as_MySQLdb()
-
-
+import os
 from flask_mysqldb import MySQL
 from flask_wtf.csrf import CSRFProtect
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -28,6 +27,11 @@ app.config['MYSQL_DB'] = 'fuelsathi'    # local DB name
 
 mysql = MySQL(app)
 csrf = CSRFProtect(app)
+
+RAZORPAY_KEY_ID = os.environ.get("rzp_live_RY4w5KXS1hsKoq")
+RAZORPAY_KEY_SECRET = os.environ.get("4QrYtwfnbwL1El4AyIHSfCvw")
+
+
 
 # ---------- LOGIN REQUIRED DECORATOR ----------
 def login_required(f):
