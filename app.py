@@ -21,10 +21,14 @@ app.secret_key = 'supersecretkey'
 # ---------- MySQL Configuration ----------
 import os
 
-app.config['MYSQL_HOST'] = os.environ.get('sql12.freesqldatabase.com')
-app.config['MYSQL_USER'] = os.environ.get('sql12804616')
-app.config['MYSQL_PASSWORD'] = os.environ.get('9ffpKt9ji4')
-app.config['MYSQL_DB'] = os.environ.get('sql12804616')
+# ✅ Remote DB config
+import os
+
+app.config['MYSQL_HOST'] = os.environ.get('DB_HOST')
+app.config['MYSQL_USER'] = os.environ.get('DB_USER')
+app.config['MYSQL_PASSWORD'] = os.environ.get('DB_PASSWORD')
+app.config['MYSQL_DB'] = os.environ.get('DB_NAME')
+
 
 
 
