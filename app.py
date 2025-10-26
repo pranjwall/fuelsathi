@@ -1,4 +1,13 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
+
+# If mysqlclient fails to install on PythonAnywhere, PyMySQL can be used:
+try:
+    import MySQLdb  # try native adapter
+except Exception:
+    import pymysql
+    pymysql.install_as_MySQLdb()
+
+
 from flask_mysqldb import MySQL
 from flask_wtf.csrf import CSRFProtect
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -11,10 +20,10 @@ app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
 # ---------- MySQL Configuration ----------
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_HOST'] = 'PranjwalPadalkar.mysql.pythonanywhere-services.com'
+app.config['MYSQL_USER'] = 'PranjwalPadalkar'
 app.config['MYSQL_PASSWORD'] = 'Test@123'
-app.config['MYSQL_DB'] = 'fuelsathi'
+app.config['MYSQL_DB'] = 'PranjwalPadalkar$fuelsathi'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 mysql = MySQL(app)
@@ -192,5 +201,6 @@ def logout():
     return redirect(url_for('login_page'))
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=5000, debug=True)
+    app.run(debug=False)
+
 
