@@ -1,5 +1,0 @@
-- [x] Add About link to dashboard.html sidebar navigation
-- [x] Add About link to index.html sidebar navigation
-- [x] Add Chart.js CDN to about.html
-- [x] Add canvas elements for graphs in about.html stats-section
-- [x] Add JavaScript code to render bar chart for stats and pie chart for fuel types in about.html

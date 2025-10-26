@@ -1,2 +1,0 @@
-# fuelsathi
-My fuelsathi app

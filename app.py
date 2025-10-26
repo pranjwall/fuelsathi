@@ -20,11 +20,11 @@ app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
 # ---------- MySQL Configuration ----------
-app.config['MYSQL_HOST'] = 'PranjwalPadalkar.mysql.pythonanywhere-services.com'
-app.config['MYSQL_USER'] = 'PranjwalPadalkar'
-app.config['MYSQL_PASSWORD'] = 'Test@123'
-app.config['MYSQL_DB'] = 'PranjwalPadalkar$fuelsathi'
-app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'       # your local username
+app.config['MYSQL_PASSWORD'] = 'Test@123'       # your local password
+app.config['MYSQL_DB'] = 'fuelsathi'    # local DB name
+
 
 mysql = MySQL(app)
 csrf = CSRFProtect(app)
@@ -40,7 +40,14 @@ def login_required(f):
     return decorated_function
 
 
+from flask_wtf import FlaskForm
+from wtforms import StringField, IntegerField, SubmitField
+from wtforms.validators import DataRequired
 
+class OrderForm(FlaskForm):
+    fuel_type = StringField('Fuel Type', validators=[DataRequired()])
+    quantity = IntegerField('Quantity', validators=[DataRequired()])
+    submit = SubmitField('Submit')
 
 #-------------------
 #-------------------
@@ -135,12 +142,16 @@ def register():
 
 
 # ---------- LOGIN ----------
+import MySQLdb.cursors  # for DictCursor
+
+# ---------- LOGIN ----------
 @app.route('/login', methods=['POST'])
 def login():
     email = request.form['email']
     password = request.form['password']
 
-    cur = mysql.connection.cursor()
+    # Use DictCursor to fetch rows as dictionaries
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cur.execute("SELECT * FROM users WHERE email = %s", (email,))
     user = cur.fetchone()
     cur.close()
@@ -154,14 +165,13 @@ def login():
         flash("Invalid email or password.", "danger")
         return redirect(url_for('login_page'))
 
-
 # ---------- DASHBOARD ----------
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    cur = mysql.connection.cursor()
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)  # DictCursor here too
     cur.execute("SELECT * FROM `order` WHERE user_id = %s", (session['user_id'],))
-    orders = cur.fetchall()
+    orders = cur.fetchall()  # now orders will be list of dictionaries
     cur.close()
 
     return render_template('dashboard.html', username=session['user_name'], orders=orders)
@@ -169,14 +179,12 @@ def dashboard():
 
 #--------------SUBMIT----------
 @app.route('/submit', methods=['GET', 'POST'])
+@login_required
 def submit():
-    if 'user_id' not in session:
-        return redirect(url_for('login_page'))
-
-    if request.method == 'POST':
-        # Retrieve form data for new order
-        fuel_type = request.form['fuel_type']
-        quantity = request.form['quantity']
+    form = OrderForm()
+    if form.validate_on_submit():
+        fuel_type = form.fuel_type.data
+        quantity = form.quantity.data
 
         cur = mysql.connection.cursor()
         cur.execute(
@@ -189,7 +197,8 @@ def submit():
         flash("Order submitted successfully!", "success")
         return redirect(url_for('dashboard'))
 
-    return render_template('submit.html')  # You’ll create a form template
+    return render_template('submit.html', form=form)
+
 
 
 
