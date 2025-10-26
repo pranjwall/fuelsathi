@@ -19,10 +19,13 @@ app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
 # ---------- MySQL Configuration ----------
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'       # your local username
-app.config['MYSQL_PASSWORD'] = 'Test@123'       # your local password
-app.config['MYSQL_DB'] = 'fuelsathi'    # local DB name
+import os
+
+app.config['MYSQL_HOST'] = os.environ.get('sql12.freesqldatabase.com')
+app.config['MYSQL_USER'] = os.environ.get('sql12804616')
+app.config['MYSQL_PASSWORD'] = os.environ.get('9ffpKt9ji4')
+app.config['MYSQL_DB'] = os.environ.get('sql12804616')
+
 
 
 mysql = MySQL(app)
