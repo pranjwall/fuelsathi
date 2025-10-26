@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fuelsathi - 500k Deliveries!</title>
+    <link rel="stylesheet" href="../static/css/explore.css">
+    <style>
+        /* Specific styles for the article page to ensure it looks good */
+        .article-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 40px;
+            color: #1a1a1a;
+        }
+
+        .article-container h1 {
+            font-size: 2.5rem;
+            color: #164c86;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .article-container p {
+            font-size: 1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #555;
+        }
+    </style>
+
+<!-- Injected by assistant: Tailwind + simple color palette -->
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<style>
+:root{
+  --brand-50: #f5f7ff;
+  --brand-100: #e6eeff;
+  --brand-200: #cce0ff;
+  --brand-300: #99c2ff;
+  --brand-400: #66a3ff;
+  --brand-500: #337fff;
+  --brand-600: #2b6fe6;
+  --brand-700: #235cc2;
+  --brand-800: #1a4699;
+  --brand-900: #13326f;
+  --accent-1: #ffde59;
+  --accent-2: #ff8a65;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --muted: #6b7280;
+}
+.bg-brand { background-color: var(--brand-500); }
+.text-brand { color: var(--brand-500); }
+.btn-brand { background-color: var(--brand-500); color: white; padding: 0.5rem 0.75rem; border-radius: .5rem; }
+.card { background: white; border-radius: .75rem; box-shadow: 0 6px 18px rgba(15,23,42,0.06); padding: 1rem; }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="explore-header">
+    <div class="hamburger-menu" style="position: absolute; top: 20px; right: 20px;">
+      <a href="{{ url_for('dashboard') }}" title="Go to Dashboard">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+        <h1>Fuelsathi Newsroom</h1>
+    </div>
+
+    <div class="article-container">
+        <h1>Fuelsathi hits a major milestone: 500,000 deliveries!</h1>
+        <p>This is a moment of immense pride and gratitude for the entire Fuelsathi team. We are thrilled to announce that we have successfully completed **half a million on-demand fuel deliveries**, a testament to our commitment to providing seamless and reliable service to our customers.</p>
+        <p>Since our inception, our mission has been to revolutionize the way fuel is delivered, making it as convenient as ordering a pizza. This milestone is not just a number; it represents the trust and confidence that thousands of customers have placed in our service. It's a validation of our hard work, our innovative technology, and our dedicated delivery partners who work tirelessly to ensure every delivery is safe and timely.</p>
+        <p>We extend our heartfelt thanks to our community of loyal customers. Your support has been the driving force behind our growth. As we celebrate this achievement, we are more motivated than ever to continue expanding our reach, improving our technology, and enhancing our services. Here's to the next half a million deliveries!</p>
+        <p>Stay tuned for more updates, exciting offers, and new service areas. Together, we are building a smarter, more efficient future for fuel delivery. Thank you for being a part of our journey!</p>
+        <a href="explore.html" class="btn">Go back to Explore</a>
+    </div>
+
+    <div class="social-media-container">
+        <h3>Stay Connected</h3>
+        <p>Follow us on our social media channels for the latest updates and stories!</p>
+        <div class="social-icons">
+            <a href="https://www.instagram.com/your_fuelsathi_profile" target="_blank" class="social-icon">
+                <img src="../static/photos/instagram.png" alt="Instagram">
+            </a>
+            <a href="https://www.facebook.com/your_fuelsathi_page" target="_blank" class="social-icon">
+                <img src="../static/photos/facebook.png" alt="Facebook">
+            </a>
+            <a href="https://wa.me/your_phonenumber" target="_blank" class="social-icon">
+                <img src="../static/photos/whatsapp.png" alt="WhatsApp">
+            </a>
+        </div>
+    </div>
+    </div>
+    
+</body>
+</html>

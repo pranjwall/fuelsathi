@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payments - FuelSathi</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../static/css/index.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="logo-section">
+    <img src="../static/photos/fuelsathi.png" alt="FuelSathi Logo" class="logo">
+    <div class="hamburger-menu" style="margin-top: 20px;">
+      <a href="{{ url_for('dashboard') }}" title="Go to Dashboard">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+  <nav>
+    <a href="index.html" class="nav-link">Dashboard</a>
+    <a href="orders.html" class="nav-link">Orders History</a>
+    <a href="profile.html" class="nav-link">Profile</a>
+    <a href="payment.html" class="nav-link active">Payments</a>
+    <a href="setting.html" class="nav-link">Settings</a>
+  </nav>
+</aside>
+
+<main class="main-content">
+  <h1 class="text-2xl font-bold mb-4">Payments</h1>
+  <div class="card p-6 max-w-md">
+    <h2 class="font-semibold text-lg mb-2">Wallet Balance</h2>
+    <p>₹1,200</p>
+    <a href="#" class="hero-btn mt-4 inline-block">Add Funds</a>
+  </div>
+</main>
+
+</body>
+</html>

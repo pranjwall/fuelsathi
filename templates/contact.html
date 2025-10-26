@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact & Support - FuelSathi</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/login.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../static/css/contact.css" />
+  </head>
+  <body>
+    <header>
+      <a href="{{ url_for('home') }}" class="logo">
+        <img src="../static/photos/fuelsathi.png" alt="FuelSathi Logo" />
+      </a>
+      <div class="hamburger-menu">
+        <a href="{{ url_for('dashboard') }}" title="Go to Dashboard">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M3 12h18M3 6h18M3 18h18"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </a>
+      </div>
+      <nav class="navbar">
+        <ul class="left-menu">
+          <li><a href="{{ url_for('house') }}">Home</a></li>
+        </ul>
+        <ul class="right-menu">
+          <li><a href="{{ url_for('about') }}">About</a></li>
+          <li>
+            <a href="{{ url_for('contact') }}" class="active-link"
+              >Contact & Support</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="hero-section">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1 class="hero-title">Contact & Support</h1>
+          <p class="hero-subtitle">We're Here to Help You</p>
+          <p class="hero-description">
+            Have questions about our fuel delivery service? Need technical
+            support or want to explore partnership opportunities? Our dedicated
+            team is ready to assist you 24/7 with expert guidance and prompt
+            solutions.
+          </p>
+        </div>
+        <div class="hero-actions">
+          <button class="cta-button" onclick="openComplaintModal()">
+            File a Complaint
+          </button>
+          <button class="secondary-button" onclick="scrollToContact()">
+            Get Support
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Methods Section -->
+    <section class="contact-methods-section">
+      <div class="container">
+        <h2 class="section-title">Get in Touch</h2>
+        <p class="section-subtitle">
+          Choose the best way to reach us for your specific needs
+        </p>
+        <div class="contact-methods-grid">
+          <div class="contact-method-card">
+            <div class="contact-method-icon">📞</div>
+            <h3>Phone Support</h3>
+            <p>
+              Call us for immediate assistance with your fuel delivery needs
+            </p>
+            <a href="tel:+918888123456" class="contact-link"
+              >+91 8888 123 456</a
+            >
+          </div>
+          <div class="contact-method-card">
+            <div class="contact-method-icon">✉️</div>
+            <h3>Email Support</h3>
+            <p>Get detailed help and responses within 24 hours</p>
+            <a href="mailto:support@fuelsathi.com" class="contact-link"
+              >support@fuelsathi.com</a
+            >
+          </div>
+          <div class="contact-method-card">
+            <div class="contact-method-icon">💬</div>
+            <h3>Live Chat</h3>
+            <p>Chat with our support team in real-time</p>
+            <span class="contact-link" style="cursor: pointer"
+              >Available 24/7</span
+            >
+          </div>
+          <div class="contact-method-card">
+            <div class="contact-method-icon">📍</div>
+            <h3>Visit Our Office</h3>
+            <p>Located in the heart of Pune's business district</p>
+            <span class="contact-link">123 Energy Plaza, Pune</span>
+          </div>
+          <div class="contact-method-card">
+            <div class="contact-method-icon">🕒</div>
+            <h3>Business Hours</h3>
+            <p>We're here when you need us most</p>
+            <span class="contact-link">Mon-Sat: 9AM-6PM IST</span>
+          </div>
+          <div class="contact-method-card">
+            <div class="contact-method-icon">🚨</div>
+            <h3>Emergency Support</h3>
+            <p>24/7 emergency fuel delivery services</p>
+            <button
+              class="contact-link"
+              onclick="openComplaintModal()"
+              style="background: none; border: none; cursor: pointer"
+            >
+              File Emergency Complaint
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Form Section -->
+    <section class="contact-form-section" id="contact-form">
+      <div class="container">
+        <div class="contact-form-container">
+          <h2 class="section-title">Send us a Message</h2>
+          <p class="section-subtitle">
+            Have a question or need assistance? We'd love to hear from you.
+          </p>
+          <form class="contact-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required />
+              </div>
+              <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" required />
+              </div>
+              <div class="form-group">
+                <label for="subject">Subject</label>
+                <select id="subject" name="subject" required>
+                  <option value="">Select Subject</option>
+                  <option value="general">General Inquiry</option>
+                  <option value="support">Technical Support</option>
+                  <option value="billing">Billing Question</option>
+                  <option value="complaint">Complaint</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea
+                id="message"
+                name="message"
+                rows="5"
+                required
+              ></textarea>
+            </div>
+            <button type="submit" class="submit-btn">
+              <i class="fas fa-paper-plane"></i>
+              Send Message
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <div class="faq-section">
+      <div class="container">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <p class="section-subtitle">Quick answers to common questions</p>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h3>How quickly can I get fuel delivered?</h3>
+            <p>
+              We typically deliver within 30-60 minutes in most areas, depending
+              on your location and availability.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>What payment methods do you accept?</h3>
+            <p>
+              We accept all major credit/debit cards, UPI, net banking, and cash
+              on delivery.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Is my fuel delivery safe and insured?</h3>
+            <p>
+              Yes, all our deliveries are handled by certified professionals
+              with full insurance coverage.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Can I schedule fuel delivery for later?</h3>
+            <p>
+              Absolutely! You can schedule deliveries up to 7 days in advance
+              through our app or website.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="social-media-section">
+      <div class="container">
+        <h2 class="section-title">Follow Us</h2>
+        <p class="section-subtitle">
+          Stay connected for updates, offers, and fuel tips
+        </p>
+        <div class="social-icons">
+          <a href="#" class="social-icon">
+            <img src="../static/photos/facebook.png" alt="Facebook" />
+          </a>
+          <a href="#" class="social-icon">
+            <img src="../static/photos/instagram.png" alt="Instagram" />
+          </a>
+          <a href="#" class="social-icon">
+            <img src="../static/photos/whatsapp.png" alt="WhatsApp" />
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Complaint Modal -->
+    <div id="complaintModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>File a Complaint</h2>
+          <span class="close" onclick="closeComplaintModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+          <form id="complaintForm" class="complaint-form">
+            <div class="form-group">
+              <label for="complaintName">Full Name *</label>
+              <input
+                type="text"
+                id="complaintName"
+                name="complaintName"
+                required
+                placeholder="Enter your full name"
+              />
+            </div>
+            <div class="form-group">
+              <label for="complaintPhone">Phone Number *</label>
+              <input
+                type="tel"
+                id="complaintPhone"
+                name="complaintPhone"
+                required
+                placeholder="+91 XXXXX XXXXX"
+              />
+            </div>
+            <div class="form-group">
+              <label for="complaintType">Complaint Type *</label>
+              <select id="complaintType" name="complaintType" required>
+                <option value="">Select complaint type...</option>
+                <option value="service">Service Quality</option>
+                <option value="delivery">Delivery Issues</option>
+                <option value="billing">Billing/Payment</option>
+                <option value="safety">Safety Concerns</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="complaintMessage">Your Complaint *</label>
+              <textarea
+                id="complaintMessage"
+                name="complaintMessage"
+                rows="6"
+                required
+                placeholder="Please describe your complaint in detail..."
+              ></textarea>
+            </div>
+            <button type="submit" class="submit-btn">
+              <span>Submit Complaint</span>
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+      <div class="modal-content success-modal">
+        <div class="modal-header">
+          <h2>Complaint Submitted Successfully</h2>
+          <span class="close" onclick="closeSuccessModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+          <div class="success-message">
+            <i class="fas fa-check-circle"></i>
+            <h3>Thank you for your feedback!</h3>
+            <p>
+              Your complaint has been submitted successfully. Our team will
+              review it within 48 hours and get back to you with a resolution.
+            </p>
+            <p>
+              You will receive a confirmation email shortly with your complaint
+              reference number.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Modal functions
+      function openComplaintModal() {
+        document.getElementById("complaintModal").style.display = "block";
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeComplaintModal() {
+        document.getElementById("complaintModal").style.display = "none";
+        document.body.style.overflow = "auto";
+      }
+
+      function closeSuccessModal() {
+        document.getElementById("successModal").style.display = "none";
+        document.body.style.overflow = "auto";
+      }
+
+      function scrollToContact() {
+        document
+          .getElementById("contact-form")
+          .scrollIntoView({ behavior: "smooth" });
+      }
+
+      // Close modal when clicking outside
+      window.onclick = function (event) {
+        const complaintModal = document.getElementById("complaintModal");
+        const successModal = document.getElementById("successModal");
+        if (event.target == complaintModal) {
+          closeComplaintModal();
+        }
+        if (event.target == successModal) {
+          closeSuccessModal();
+        }
+      };
+
+      // Handle complaint form submission
+      document
+        .getElementById("complaintForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          // Get form data
+          const formData = new FormData(this);
+          const complaintData = {
+            name: formData.get("complaintName"),
+            phone: formData.get("complaintPhone"),
+            type: formData.get("complaintType"),
+            message: formData.get("complaintMessage"),
+          };
+
+          // Here you would typically send the data to your backend
+          console.log("Complaint submitted:", complaintData);
+
+          // Close complaint modal and show success modal
+          closeComplaintModal();
+          document.getElementById("successModal").style.display = "block";
+          document.body.style.overflow = "hidden";
+
+          // Reset form
+          this.reset();
+        });
+    </script>
+  </body>
+</html>

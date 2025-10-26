@@ -1,0 +1,299 @@
+:root {
+  --primary-color: #2b67ff;
+  --secondary-color: #6c757d;
+  --accent-color: #ffde59;
+  --text-color: #221314;
+  --bg-color: #fff;
+  --second-bg-color: #f8f5f2;
+  --font-family: "Poppins", sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #2b67ff 0%, #5a3ec8 100%);
+  font-family: var(--font-family);
+  color: var(--text-color);
+  min-height: 100vh;
+  margin: 0;
+  padding: 2rem 0;
+  position: relative;
+}
+
+.dashboard-icon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+}
+
+.dashboard-icon a {
+  display: inline-block;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+  color: var(--primary-color);
+}
+
+.dashboard-icon a:hover {
+  background: white;
+  transform: scale(1.1);
+}
+
+.container {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  backdrop-filter: blur(10px);
+}
+
+.card {
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 25px rgba(43, 103, 255, 0.1);
+  padding: 2rem;
+}
+
+/* Progress Bar */
+.progress-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+.step.active {
+  opacity: 1;
+}
+
+.step-circle {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.step.active .step-circle {
+  background: var(--primary-color);
+  color: white;
+}
+
+.step-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.step-line {
+  width: 4rem;
+  height: 2px;
+  background: #e9ecef;
+  margin: 0 1rem;
+}
+
+/* Wizard Steps */
+.wizard-step {
+  display: none;
+}
+
+.wizard-step.active {
+  display: block;
+}
+
+.input-box {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #e9ecef;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.input-box:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(43, 103, 255, 0.1);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-color) 0%, #5a3ec8 100%);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(43, 103, 255, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(43, 103, 255, 0.4);
+}
+
+.btn-secondary {
+  background: white;
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+.map-container {
+  border-radius: 0.75rem;
+  border: 2px solid #e9ecef;
+  height: 16rem;
+  width: 100%;
+  margin-top: 0.5rem;
+  overflow: hidden;
+}
+
+.pump-list {
+  max-height: 20rem;
+  overflow-y: auto;
+  border: 2px solid #e9ecef;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  background: #f8f9fa;
+}
+
+.pump-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.pump-item:hover {
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.pump-item input[type="radio"] {
+  margin-right: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.pump-item label {
+  cursor: pointer;
+  flex: 1;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .card {
+    padding: 1.5rem;
+  }
+
+  .progress-bar {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .step-line {
+    width: 2px;
+    height: 2rem;
+    margin: 0.5rem 0;
+  }
+
+  .input-box {
+    padding: 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  .btn-primary, .btn-secondary {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+
+  .map-container {
+    height: 14rem;
+  }
+
+  .pump-list {
+    max-height: 15rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  body {
+    padding: 1rem 0;
+  }
+
+  .container {
+    padding: 0.5rem;
+  }
+
+  .card {
+    padding: 1rem;
+  }
+
+  .step-circle {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 0.875rem;
+  }
+
+  .step-label {
+    font-size: 0.75rem;
+  }
+
+  .input-box {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .btn-primary, .btn-secondary {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+
+  .map-container {
+    height: 12rem;
+  }
+
+  .pump-list {
+    max-height: 12rem;
+    padding: 0.75rem;
+  }
+
+  .pump-item {
+    padding: 0.5rem;
+  }
+}

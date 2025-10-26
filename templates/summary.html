@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Summary</title>
+  <link rel="stylesheet" href="../static/css/submit.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container max-w-3xl mx-auto py-10 px-4">
+    <div class="hamburger-menu" style="position: absolute; top: 20px; right: 20px;">
+      <a href="{{ url_for('dashboard') }}" title="Go to Dashboard">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+    <div class="card">
+         <h1 class="text-3xl font-bold text-green-600 mb-4">🎉 Thanks for Ordering!</h1>
+      <h2 class="text-2xl font-bold mb-4">✅ Order Summary</h2>
+      <div id="summaryDetails" class="text-lg text-gray-700"></div>
+      <a href="{{ url_for('submit') }}" class="btn-primary mt-6 inline-block">🔄 Place Another Order</a>
+      <a href="{{ url_for('dashboard') }}" class="btn-secondary mt-6 ml-4 inline-block">🏠 Back to Dashboard</a>
+    </div>
+  </div>
+
+  <script>
+    // Use Jinja2 data passed from Flask
+    {% if order %}
+    const order = {{ order | tojson }};
+    const summaryDiv = document.getElementById("summaryDetails");
+
+    summaryDiv.innerHTML = `
+      <p><strong>Order ID:</strong> ${order.id}</p>
+      <p><strong>Vehicle:</strong> ${order.vehicle_number} (${order.vehicle_model || "-"})</p>
+      <p><strong>Fuel Type:</strong> ${order.fuel_type}</p>
+      <p><strong>${order.order_by === "litres" ? "Litres" : "Cost"}:</strong>
+         ${order.order_by === "litres" ? (order.fuel_litres || "-") : "₹" + (order.fuel_cost || "-")}</p>
+      <p><strong>Payment:</strong> ${order.payment_method}</p>
+      <p><strong>Location:</strong> (${order.lat || "NA"}, ${order.lng || "NA"})</p>
+      <p><strong>Status:</strong> ${order.status}</p>
+      <p><strong>Ordered At:</strong> ${new Date(order.created_at).toLocaleString()}</p>
+    `;
+    {% endif %}
+  </script>
+</body>
+</html>

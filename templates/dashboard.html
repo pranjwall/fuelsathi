@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fuel Sathi Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/dashboard.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <a href="#" class="logo">
+            <img
+              src="{{ url_for('static', filename='photos/fuelsathi.png') }}"
+              alt="FuelSathi Logo"
+            />
+          </a>
+          <div class="brand-info">
+            <h3>FuelSathi</h3>
+            <p>Your Trusted Fuel Delivery Partner</p>
+          </div>
+        </div>
+        <nav class="sidebar-nav">
+          <ul>
+            <li class="nav-item">
+              <a href="#" class="nav-link active" data-section="profile">
+                <i class="fas fa-user"></i>
+                <span>My Profile</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" data-section="dashboard">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" data-section="orders">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Orders</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" data-section="payments">
+                <i class="fas fa-credit-card"></i>
+                <span>Payments</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" data-section="settings">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ url_for('about') }}" class="nav-link">
+                <i class="fas fa-info-circle"></i>
+                <span>About</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" data-section="saved-pumps">
+                <i class="fas fa-gas-pump"></i>
+                <span>Saved Petrol Pumps</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Bottom Navigation Bar -->
+      <div class="bottom-nav">
+        <ul>
+          <li>
+            <a href="{{ url_for('house') }}"
+              ><i class="fas fa-home"></i> Home</a
+            >
+          </li>
+          <li>
+            <a href="{{ url_for('submit') }}"
+              ><i class="fas fa-plus"></i> Order Fuel</a
+            >
+          </li>
+          <li>
+            <a href="{{ url_for('logout') }}"
+              ><i class="fas fa-sign-out-alt"></i> Logout</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Profile Section -->
+        <section id="profile-section" class="content-section active">
+          <div class="section-header">
+            <h1>My Profile</h1>
+            <div class="user-info">
+              <span class="username">Welcome, {{ username }}!</span>
+            </div>
+          </div>
+          <div class="profile-content">
+            <div class="profile-card">
+              <div class="profile-avatar">
+                <i class="fas fa-user-circle"></i>
+              </div>
+              <div class="profile-details">
+                <h3>{{ username }}</h3>
+                <p>Fuel Customer</p>
+                <div class="profile-stats">
+                  <div class="stat">
+                    <span class="stat-number">{{ total_orders }}</span>
+                    <span class="stat-label">Total Orders</span>
+                  </div>
+                  <div class="stat">
+                    <span class="stat-number">{{ total_fuel }}L</span>
+                    <span class="stat-label">Total Fuel</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard-section" class="content-section">
+          <div class="section-header">
+            <h1>Dashboard Overview</h1>
+          </div>
+          <div class="stats">
+            <div class="card">
+              <div class="card-icon">
+                <i class="fas fa-shopping-cart"></i>
+              </div>
+              <div class="card-content">
+                <h3>Total Orders</h3>
+                <p>{{ total_orders }}</p>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-icon">
+                <i class="fas fa-gas-pump"></i>
+              </div>
+              <div class="card-content">
+                <h3>Total Fuel (L)</h3>
+                <p>{{ total_fuel }}</p>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-icon">
+                <i class="fas fa-clock"></i>
+              </div>
+              <div class="card-content">
+                <h3>Pending Orders</h3>
+                <p>{{ pending_orders }}</p>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-icon">
+                <i class="fas fa-rupee-sign"></i>
+              </div>
+              <div class="card-content">
+                <h3>Payments Received</h3>
+                <p>₹ {{ payments_received }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="activity">
+            <div class="recent-orders">
+              <h2>Recent Orders</h2>
+              <ul>
+                {% for order in recent_orders %}
+                <li>
+                  <i class="fas fa-gas-pump"></i> Order #{{ order.id }} - {{
+                  order.fuel_litres or order.fuel_cost }} {{ order.fuel_type }}
+                  - {{ order.status }}
+                </li>
+                {% else %}
+                <li>No recent orders</li>
+                {% endfor %}
+              </ul>
+            </div>
+
+            <div class="recent-updates">
+              <h2>Recent Updates</h2>
+              <ul>
+                <li>
+                  <i class="fas fa-cloud-rain"></i> Delivery delay due to rain —
+                  14/10/2025
+                </li>
+                <li>
+                  <i class="fas fa-credit-card"></i> New payment option added —
+                  10/10/2025
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Orders Section -->
+        <section id="orders-section" class="content-section">
+          <div class="section-header">
+            <h1>My Orders</h1>
+          </div>
+          <div class="orders-content">
+            <div class="orders-list">
+              {% for order in recent_orders %}
+              <div class="order-card">
+                <div class="order-header">
+                  <span class="order-id">Order #{{ order.id }}</span>
+                  <span class="order-status {{ order.status.lower() }}"
+                    >{{ order.status }}</span
+                  >
+                </div>
+                <div class="order-details">
+                  <p>
+                    <i class="fas fa-gas-pump"></i> {{ order.fuel_litres or
+                    order.fuel_cost }} {{ order.fuel_type }}
+                  </p>
+                  <p>
+                    <i class="fas fa-calendar"></i> Ordered on {{ order.date }}
+                  </p>
+                </div>
+              </div>
+              {% else %}
+              <p>No orders found.</p>
+              {% endfor %}
+            </div>
+          </div>
+        </section>
+
+        <!-- Payments Section -->
+        <section id="payments-section" class="content-section">
+          <div class="section-header">
+            <h1>Payment History</h1>
+          </div>
+          <div class="payments-content">
+            <div class="payment-summary">
+              <div class="summary-card">
+                <h3>Total Paid</h3>
+                <p class="amount">₹ {{ payments_received }}</p>
+              </div>
+              <div class="summary-card">
+                <h3>Pending Payments</h3>
+                <p class="amount">₹ 0</p>
+              </div>
+            </div>
+            <div class="payment-history">
+              <h3>Recent Transactions</h3>
+              <ul>
+                <li>
+                  <i class="fas fa-check-circle"></i> Payment for Order #123 - ₹
+                  2,500 - Completed
+                </li>
+                <li>
+                  <i class="fas fa-check-circle"></i> Payment for Order #122 - ₹
+                  1,800 - Completed
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Settings Section -->
+        <section id="settings-section" class="content-section">
+          <div class="section-header">
+            <h1>Settings</h1>
+          </div>
+          <div class="settings-content">
+            <div class="settings-group">
+              <h3>Account Settings</h3>
+              <div class="setting-item">
+                <label for="email">Email Notifications</label>
+                <input type="checkbox" id="email" checked />
+              </div>
+              <div class="setting-item">
+                <label for="sms">SMS Notifications</label>
+                <input type="checkbox" id="sms" />
+              </div>
+            </div>
+            <div class="settings-group">
+              <h3>Security</h3>
+              <button class="btn-secondary">Change Password</button>
+              <button class="btn-secondary">Two-Factor Authentication</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Saved Petrol Pumps Section -->
+        <section id="saved-pumps-section" class="content-section">
+          <div class="section-header">
+            <h1>Saved Petrol Pumps</h1>
+          </div>
+          <div class="saved-pumps-content">
+            <div class="pump-card">
+              <div class="pump-image">
+                <img
+                  src="/static/photos/petrol.jpg"
+                  alt="Ganeshkhind Road Petrol Pump"
+                />
+              </div>
+              <div class="pump-details">
+                <h3>Ganeshkhind Road Petrol Pump</h3>
+                <p class="pump-location">
+                  <i class="fas fa-map-marker-alt"></i> Ganeshkhind Road, Pune,
+                  Maharashtra
+                </p>
+                <div class="pump-info">
+                  <span class="fuel-type">Petrol & Diesel Available</span>
+                  <span class="rating"><i class="fas fa-star"></i> 4.5/5</span>
+                </div>
+                <div class="pump-actions">
+                  <button class="btn-primary">Get Directions</button>
+                  <button class="btn-secondary">Call Now</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='javas/dashboard.js') }}"></script>
+  </body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Document</title>
+    <!-- Css -->
+    <link rel="stylesheet" href="../static/css/style.css" />
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Paytone+One&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Paytone+One&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Paytone+One&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <!-- Header (Navigation-bar)-->
+    <header>
+      <a href="#" class="logo">
+        <img src="../static/photos/fuelsathi.png" alt="Logo" />
+      </a>
+      <nav class="navbar">
+        <ul class="left-menu">
+        </ul>
+        <ul class="right-menu">
+          <li><a href="{{ url_for('about') }}">About</a></li>
+          <li><a href="{{ url_for('contact') }}">Contact & Support</a></li>
+          <li><a href="{{ url_for('login') }}">Login</a></li>
+          <li><a href="{{ url_for('dashboard') }}">Profile</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- Home Section -->
+    <section class="home" id="home">
+      <div class="home-text">
+        <h1>
+          Live the dream, <br />
+          ride the machine
+        </h1>
+        <p>
+          Your One stop destination to fullfill your dream of owning a superbike
+          <br />
+          Let your inner child free and rave the motor high
+        </p>
+        <a href="#" class="home-btn">Explore now</a>
+      </div>
+
+      <div class="info-container">
+        <div class="info-sub">
+          <div><h1 class="info-txt">How do we do it?</h1></div>
+          <div>
+            <p class="info-p">
+              “Don’t let an empty tank stop your journey – count on us for fast
+              and reliable fuel delivery for both cars and bikes! Whether you’re
+              stranded on the road or parked at home, just give us a call and
+              our team will promptly deliver the fuel you need to keep you
+              moving hassle-free.”
+            </p>
+          </div>
+          <div class="info-info"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="infoinfo-container">
+      <div class="FLEX">
+        <div class="same">
+          <img src="../static/photos/Fuel-Delivery-1.png" alt="" />
+          <p>Buy fuel from nearest station</p>
+        </div>
+        <div class="same">
+          <img src="../static/photos/Fuel-Delivery-2.png" alt="" />
+          <p>Check Customer ID</p>
+        </div>
+        <div class="same">
+          <img src="../static/photos/Fuel-Delivery-3.png" alt="" />
+          <p>Fill the fuel to vehicle</p>
+        </div>
+        <div class="same-2">
+          <img src="../static/photos/payment.png" alt="" />
+          <p>
+            We accept payment through <br />
+            online, payTM, UPI etc
+          </p>
+        </div>
+      </div>
+
+      <div class="left-pic">
+        <div class="about-left">
+          <img src="../static/photos/m-low.jpg" alt="" />
+          <div class="about-flex">
+            <h1 class="about-header">Car & Bike Fuel Delivery Support</h1>
+            <p>
+              Emergency fuel delivery is an essential service when someone is
+              stuck on the road due to no fuel. No more worries when you get
+              stuck next time because of an empty fuel tank. We deliver 2 to 5
+              litres of petrol or diesel of your choice at your spot. The fuel
+              will be charged at the actuals and our fuel delivery charges are
+              additional. We bring fuel in a safe jerry can from the nearest
+              fuel station available and the fuel will be directly filled into
+              the vehicle by our representative and will not be delivered in can
+              to the customer. The delivery time of the fuel varies depending on
+              how far the nearest fuel station is available.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="right-pic">
+        <div class="about-right">
+          <img src="../static/photos/multimeter_mechanic.jpg" alt="" />
+          <div class="about-flex2">
+            <h1 class="about-header2">Important points to remember:</h1>
+            <p>
+              Emergency fuel delivery is an essential service when someone is
+              stuck on the road due to no fuel. No more worries when you get
+              stuck next time because of an empty fuel tank. We deliver 2 to 5
+              litres of petrol or diesel of your choice at your spot. The fuel
+              will be charged at the actuals and our fuel delivery charges are
+              additional. We bring fuel in a safe jerry can from the nearest
+              fuel station available and the fuel will be directly filled into
+              the vehicle by our representative and will not be delivered in can
+              to the customer. The delivery time of the fuel varies depending on
+              how far the nearest fuel station is available.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="whenever-section">
+      <div class="whenever-wrapper">
+        <div class="whenever-left">
+          <h2>Whenever & Wherever</h2>
+          <p>We've got you covered wherever you go across country!</p>
+          <button class="whenever-btn">Book Service</button>
+        </div>
+        <div class="whenever-right">
+          <div class="whenever-card">
+            <img
+              src="../static/photos/Fastest-Turn.png"
+              alt="Fastest Turn-Around Icon"
+              class="whenever-icon"
+            />
+            <div>
+              <h3>Fastest Turn-Around</h3>
+              <p>
+                Over years we have built a strong network of skilled and
+                verified mechanics to assist you at the earliest.
+              </p>
+            </div>
+          </div>
+
+          <div class="whenever-card">
+            <img
+              src="../static/photos/Top-Rated.png"
+              alt="Fastest Turn-Around Icon"
+              class="whenever-icon"
+            />
+            <div>
+              <h3>One of the Top Rated</h3>
+              <p>
+                We are committed towards your safety, and aim at giving the most
+                hassle free experience.
+              </p>
+            </div>
+          </div>
+
+          <div class="whenever-card">
+            <img
+              src="../static/photos/Onspot-Service.png"
+              alt="Fastest Turn-Around Icon"
+              class="whenever-icon"
+            />
+            <div>
+              <h3>On-the-spot support</h3>
+              <p>
+                Over years we have built a strong nationwide network of skilled
+                and verified mechanics to assist you on spot.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="info"></section>
+    <!-- Javascript -->
+    <script src="../static/javas/app.js"></script>
+  </body>
+</html>

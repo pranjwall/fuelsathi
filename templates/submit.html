@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fuel Order Wizard</title>
+    <link rel="stylesheet" href="../static/css/submit.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  </head>
+  <body>
+    <div class="dashboard-icon">
+      <a href="{{ url_for('dashboard') }}" title="Go to Dashboard">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"
+            fill="currentColor"
+          />
+        </svg>
+      </a>
+    </div>
+    <div class="container max-w-4xl mx-auto py-10 px-4">
+      <div class="card">
+        <h1 class="text-2xl font-bold mb-6 text-center">Place Fuel Order</h1>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar mb-8">
+          <div class="step active" data-step="1">
+            <div class="step-circle">1</div>
+            <div class="step-label">Vehicle Info</div>
+          </div>
+          <div class="step-line"></div>
+          <div class="step" data-step="2">
+            <div class="step-circle">2</div>
+            <div class="step-label">Location</div>
+          </div>
+          <div class="step-line"></div>
+          <div class="step" data-step="3">
+            <div class="step-circle">3</div>
+            <div class="step-label">Select Pump & Order</div>
+          </div>
+        </div>
+
+        <form id="orderForm" class="wizard-form">
+          <!-- Step 1: Vehicle Info -->
+          <div class="wizard-step active" id="step1">
+            <h2 class="text-xl font-semibold mb-4">Vehicle Information</h2>
+            <div class="mb-4">
+              <label class="block mb-1 font-semibold" style="margin-top: 5px"
+                >Vehicle Number</label
+              >
+              <input
+                type="text"
+                id="vehicleNumber"
+                class="input-box"
+                placeholder="Enter vehicle number"
+                required
+              />
+            </div>
+            <div class="mb-4">
+              <label class="block mb-1 font-semibold" style="margin-top: 5px"
+                >Vehicle Model</label
+              >
+              <input
+                type="text"
+                id="vehicleModel"
+                class="input-box"
+                placeholder="Enter vehicle model"
+              />
+            </div>
+            <div class="mb-4">
+              <label class="block mb-1 font-semibold" style="margin-top: 5px"
+                >Fuel Type</label
+              >
+              <select id="fuelType" class="input-box">
+                <option value="Petrol">Petrol</option>
+                <option value="Diesel">Diesel</option>
+                <option value="CNG">CNG</option>
+                <option value="Power">Power</option>
+              </select>
+            </div>
+            <button type="button" class="btn-primary w-full next-step">
+              Next: Set Location
+            </button>
+          </div>
+
+          <!-- Step 2: Location -->
+          <div class="wizard-step" id="step2">
+            <h2 class="text-xl font-semibold mb-4">Select Your Location</h2>
+            <div class="mb-4">
+              <label class="block mb-1 font-semibold">Current Location</label>
+              <div id="map" class="map-container"></div>
+              <button type="button" id="getLocation" class="btn-secondary mt-2">
+                📍 Use My Location
+              </button>
+            </div>
+            <div class="flex gap-4">
+              <button type="button" class="btn-secondary w-1/2 prev-step">
+                Back
+              </button>
+              <button type="button" class="btn-primary w-1/2 next-step">
+                Next: Select Pump
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 3: Select Pump & Order Details -->
+          <div class="wizard-step" id="step3">
+            <h2 class="text-xl font-semibold mb-4">
+              Select Petrol Pump & Order Details
+            </h2>
+            <div class="mb-4">
+              <label class="block mb-1 font-semibold"
+                >Nearby Petrol Pumps</label
+              >
+              <div id="pumpList" class="pump-list"></div>
+            </div>
+            <div class="mb-4">
+              <label class="block mb-1 font-semibold">Order By</label>
+              <div class="flex gap-4">
+                <label
+                  ><input type="radio" name="orderBy" value="litres" checked />
+                  Litres</label
+                >
+                <label
+                  ><input type="radio" name="orderBy" value="cost" />
+                  Cost</label
+                >
+              </div>
+            </div>
+            <div id="litresInput" class="mb-4">
+              <label class="block mb-1 font-semibold">Fuel (Litres)</label>
+              <input
+                type="number"
+                id="fuelLitres"
+                class="input-box"
+                placeholder="Enter litres"
+              />
+            </div>
+            <div id="costInput" class="mb-4 hidden">
+              <label class="block mb-1 font-semibold">Fuel Cost (₹)</label>
+              <input
+                type="number"
+                id="fuelCost"
+                class="input-box"
+                placeholder="Enter amount in ₹"
+              />
+            </div>
+            <div class="mb-4">
+              <label class="block mb-1 font-semibold">Payment Method</label>
+              <select id="paymentMethod" class="input-box">
+                <option value="Cash">Cash</option>
+                <option value="UPI">UPI</option>
+                <option value="Credit Card">Credit Card</option>
+                <option value="Debit Card">Debit Card</option>
+              </select>
+            </div>
+            <div class="flex gap-4">
+              <button type="button" class="btn-secondary w-1/2 prev-step">
+                Back
+              </button>
+              <button type="submit" id="placeOrder" class="btn-primary w-1/2">
+                🚀 Place Order
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script src="../static/javas/submit.js"></script>
+  </body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FuelSathi Dashboard</title>
+
+  <!-- Tailwind CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+  <!-- Your custom CSS -->
+  <link rel="stylesheet" href="../static/css/explore.css">
+
+
+<!-- Injected by assistant: Tailwind + simple color palette -->
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<style>
+:root{
+  --brand-50: #f5f7ff;
+  --brand-100: #e6eeff;
+  --brand-200: #cce0ff;
+  --brand-300: #99c2ff;
+  --brand-400: #66a3ff;
+  --brand-500: #337fff;
+  --brand-600: #2b6fe6;
+  --brand-700: #235cc2;
+  --brand-800: #1a4699;
+  --brand-900: #13326f;
+  --accent-1: #ffde59;
+  --accent-2: #ff8a65;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --muted: #6b7280;
+}
+.bg-brand { background-color: var(--brand-500); }
+.text-brand { color: var(--brand-500); }
+.btn-brand { background-color: var(--brand-500); color: white; padding: 0.5rem 0.75rem; border-radius: .5rem; }
+.card { background: white; border-radius: .75rem; box-shadow: 0 6px 18px rgba(15,23,42,0.06); padding: 1rem; }
+</style>
+</head>
+<body>
+
+<!-- <header>
+    <a href="logo.png" class="logo">
+        <a href="#" class="logo"><img class="Logo-image" src="./Styles/Images/logo.png" alt=""></a>
+    </a>
+    <div class="bx bx-menu" id="menu-icon"></div>
+    <ul class="navbar">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#explore">Explore</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+    </ul>
+</header> -->
+
+<div class="container">
+    <div class="explore-header">
+    <div class="hamburger-menu" style="position: absolute; top: 20px; right: 20px;">
+      <a href="{{ url_for('dashboard') }}" title="Go to Dashboard">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+        <h1>Explore Fuelsathi</h1>
+    </div>
+
+    <div class="featured-story">
+        <div class="story-image-placeholder">
+            <img src="../static/photos/fuelman.jpg" alt="Fuelsathi delivering fuel">
+        </div>
+        <div class="story-content">
+            <h2>Fuelsathi hits 500,000 deliveries!</h2>
+            <p>We’re celebrating a major milestone! The Fuelsathi team is proud to announce we've completed half a million on-demand fuel deliveries across the city. Thank you for your trust and support!</p>
+            <a href="readmore.html" class="btn">Read more</a>
+        </div>
+    </div>
+    
+    <div class="social-media-container">
+        <h3>Stay Connected</h3>
+        <p>Follow us on our social media channels for the latest updates and stories!</p>
+        <div class="social-icons">
+            <a href="https://www.instagram.com/your_fuelsathi_profile" target="_blank" class="social-icon">
+                <img src="../static/photos/instagram.png" alt="Instagram">
+            </a>
+            <a href="https://www.facebook.com/your_fuelsathi_page" target="_blank" class="social-icon">
+                <img src="../static/photos/facebook.png" alt="Facebook">
+            </a>
+            <a href="https://wa.me/your_phonenumber" target="_blank" class="social-icon">
+                <img src="../static/photos/whatsapp.png" alt="WhatsApp">
+            </a>
+        </div>
+    </div>
+</div>
+    
+</body>
+</html>

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>about us</title>
+    <link rel="stylesheet" href="../static/css/about.css" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      :root {
+        --brand-50: #f5f7ff;
+        --brand-100: #e6eeff;
+        --brand-200: #cce0ff;
+        --brand-300: #99c2ff;
+        --brand-400: #66a3ff;
+        --brand-500: #337fff;
+        --brand-600: #2b6fe6;
+        --brand-700: #235cc2;
+        --brand-800: #1a4699;
+        --brand-900: #13326f;
+        --accent-1: #ffde59;
+        --accent-2: #ff8a65;
+        --success: #22c55e;
+        --danger: #ef4444;
+        --muted: #6b7280;
+      }
+      .bg-brand {
+        background-color: var(--brand-500);
+      }
+      .text-brand {
+        color: var(--brand-500);
+      }
+      .btn-brand {
+        background-color: var(--brand-500);
+        color: white;
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.5rem;
+      }
+      .card {
+        background: white;
+        border-radius: 0.75rem;
+        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+        padding: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header
+      style="
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: black; /* Consistent black background */
+        padding: 0px 5%; /* Adjust padding as needed */
+      "
+    >
+      <a href="#" class="logo" style="display: flex; align-items: center">
+        <img
+          src="../static/photos/fuelsathi.png"
+          alt="Logo"
+          style="height: 70px; width: auto"
+        />
+      </a>
+      <div
+        class="hamburger-menu"
+        style="display: flex; align-items: center; margin-right: 20px"
+      >
+        <a
+          href="{{ url_for('dashboard') }}"
+          title="Go to Dashboard"
+          style="color: white"
+        >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M3 12h18M3 6h18M3 18h18"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </a>
+      </div>
+      <nav
+        class="navbar"
+        style="display: flex; justify-content: flex-end; width: auto"
+      >
+        <ul style="display: flex; list-style: none; margin: 0; padding: 0">
+          <li>
+            <a
+              href="{{ url_for('house') }}"
+              style="
+                color: white;
+                padding: 10px 15px;
+                text-decoration: none;
+                transition: 0.4s;
+              "
+              >Home</a
+            >
+          </li>
+          <li>
+            <a
+              href="{{ url_for('about') }}"
+              style="
+                color: white;
+                padding: 10px 15px;
+                text-decoration: none;
+                transition: 0.4s;
+              "
+              >About</a
+            >
+          </li>
+          <li>
+            <a
+              href="{{ url_for('contact') }}"
+              style="
+                color: white;
+                padding: 10px 15px;
+                text-decoration: none;
+                transition: 0.4s;
+              "
+              >Contact & Support</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <div class="hero-section">
+      <div class="hero-content">
+        <h1 class="hero-title">About Fuelsathi</h1>
+        <p class="hero-subtitle">
+          Your Trusted Partner for On-Demand Fuel Delivery
+        </p>
+        <p class="hero-description">
+          We are revolutionizing the way you refuel by bringing petrol directly
+          to your doorstep. Our mission is to provide a safe, convenient, and
+          reliable service that saves you time and eliminates the hassle of
+          traditional refueling.
+        </p>
+        <button class="cta-button">Explore Our Services</button>
+      </div>
+    </div>
+
+    <div class="features-section">
+      <div class="container">
+        <h2 class="section-title">Why Choose Fuelsathi?</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">🚚</div>
+            <h3>Fast Delivery</h3>
+            <p>Quick and reliable fuel delivery at your location</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🔒</div>
+            <h3>Safe & Secure</h3>
+            <p>Certified fuel with quality assurance</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">💰</div>
+            <h3>Competitive Pricing</h3>
+            <p>Best rates with transparent pricing</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📱</div>
+            <h3>Easy Booking</h3>
+            <p>Simple app-based ordering system</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="partners-section">
+      <div class="container">
+        <h2 class="section-title">Our Fuel Partners</h2>
+        <p class="section-subtitle">
+          We partner with leading fuel brands to ensure quality and reliability
+        </p>
+        <div class="partners-grid">
+          <div class="partner-card">
+            <div
+              class="partner-image"
+              style="background-image: url('../static/photos/rel.jpg')"
+            ></div>
+            <div class="partner-content">
+              <h3>Reliance</h3>
+              <p>Premium fuel quality and trusted service for over decades</p>
+            </div>
+          </div>
+          <div class="partner-card">
+            <div
+              class="partner-image"
+              style="background-image: url('../static/photos/indian.jpg')"
+            ></div>
+            <div class="partner-content">
+              <h3>Indian Oil</h3>
+              <p>
+                Reliable and affordable fuel options with nationwide presence
+              </p>
+            </div>
+          </div>
+          <div class="partner-card">
+            <div
+              class="partner-image"
+              style="background-image: url('../static/photos/hp.jpg')"
+            ></div>
+            <div class="partner-content">
+              <h3>HP</h3>
+              <p>High-performance fuels engineered for modern vehicles</p>
+            </div>
+          </div>
+          <div class="partner-card">
+            <div
+              class="partner-image"
+              style="background-image: url('../static/photos/shell.jpg')"
+            ></div>
+            <div class="partner-content">
+              <h3>Shell</h3>
+              <p>Advanced fuel technology and comprehensive vehicle care</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-section">
+      <div class="container">
+        <h2 class="section-title">Our Statistics</h2>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-number">10,000+</div>
+            <div class="stat-label">Happy Customers</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">500+</div>
+            <div class="stat-label">Cities Covered</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Service Available</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">4.8★</div>
+            <div class="stat-label">Customer Rating</div>
+          </div>
+        </div>
+        <div
+          class="charts-container"
+          style="display: flex; justify-content: space-around; margin-top: 2rem"
+        >
+          <div style="width: 45%">
+            <canvas id="statsChart"></canvas>
+          </div>
+          <div style="width: 45%">
+            <canvas id="fuelChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="social-media-section">
+      <div class="container">
+        <h2 class="section-title">Connect With Us</h2>
+        <p class="section-subtitle">
+          Follow us on social media for updates and offers
+        </p>
+        <div class="social-icons">
+          <a href="#" class="social-icon">
+            <img src="../static/photos/facebook.png" alt="Facebook" />
+          </a>
+          <a href="#" class="social-icon">
+            <img src="../static/photos/instagram.png" alt="Instagram" />
+          </a>
+          <a href="#" class="social-icon">
+            <img src="../static/photos/whatsapp.png" alt="WhatsApp" />
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Bar chart for stats
+      const statsCtx = document.getElementById("statsChart").getContext("2d");
+      const statsChart = new Chart(statsCtx, {
+        type: "bar",
+        data: {
+          labels: [
+            "Happy Customers",
+            "Cities Covered",
+            "Service Availability",
+            "Customer Rating",
+          ],
+          datasets: [
+            {
+              label: "Statistics",
+              data: [10000, 500, 24, 4.8],
+              backgroundColor: [
+                "rgba(255, 99, 132, 0.2)",
+                "rgba(54, 162, 235, 0.2)",
+                "rgba(255, 206, 86, 0.2)",
+                "rgba(75, 192, 192, 0.2)",
+              ],
+              borderColor: [
+                "rgba(255, 99, 132, 1)",
+                "rgba(54, 162, 235, 1)",
+                "rgba(255, 206, 86, 1)",
+                "rgba(75, 192, 192, 1)",
+              ],
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+            },
+          },
+        },
+      });
+
+      // Pie chart for fuel types
+      const fuelCtx = document.getElementById("fuelChart").getContext("2d");
+      const fuelChart = new Chart(fuelCtx, {
+        type: "pie",
+        data: {
+          labels: ["Petrol", "Diesel", "CNG"],
+          datasets: [
+            {
+              label: "Fuel Types",
+              data: [60, 30, 10],
+              backgroundColor: [
+                "rgba(255, 99, 132, 0.2)",
+                "rgba(54, 162, 235, 0.2)",
+                "rgba(255, 206, 86, 0.2)",
+              ],
+              borderColor: [
+                "rgba(255, 99, 132, 1)",
+                "rgba(54, 162, 235, 1)",
+                "rgba(255, 206, 86, 1)",
+              ],
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: "top",
+            },
+            title: {
+              display: true,
+              text: "Fuel Types Distribution",
+            },
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
