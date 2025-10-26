@@ -12,7 +12,7 @@ from flask_mysqldb import MySQL
 from flask_wtf.csrf import CSRFProtect
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
-
+import razorpay
 
 app = Flask(__name__)
 
@@ -40,7 +40,11 @@ def login_required(f):
     return decorated_function
 
 
+#---------- pay APP ----------
+RAZORPAY_KEY_ID = "rzp_live_RY4w5KXS1hsKoq"
+RAZORPAY_KEY_SECRET = "4QrYtwfnbwL1El4AyIHSfCvw"
 
+razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
 
 #-------------------
 #-------------------
@@ -169,14 +173,12 @@ def dashboard():
 
 #--------------SUBMIT----------
 @app.route('/submit', methods=['GET', 'POST'])
+@login_required
 def submit():
-    if 'user_id' not in session:
-        return redirect(url_for('login_page'))
-
     if request.method == 'POST':
-        # Retrieve form data for new order
         fuel_type = request.form['fuel_type']
-        quantity = request.form['quantity']
+        quantity = float(request.form['quantity'])
+        payment_method = request.form['paymentMethod']
 
         cur = mysql.connection.cursor()
         cur.execute(
@@ -184,12 +186,54 @@ def submit():
             (session['user_id'], fuel_type, quantity)
         )
         mysql.connection.commit()
+        order_id = cur.lastrowid
         cur.close()
 
-        flash("Order submitted successfully!", "success")
-        return redirect(url_for('dashboard'))
+        # Calculate total amount (e.g., ₹100 per litre)
+        amount = int(quantity * 100 * 100)  # in paise, Razorpay accepts paise
 
-    return render_template('submit.html')  # You’ll create a form template
+        # Create Razorpay order
+        razorpay_order = razorpay_client.order.create(dict(
+            amount=amount,
+            currency='INR',
+            payment_capture='1'
+        ))
+
+        # Save razorpay_order_id in DB (optional)
+        cur = mysql.connection.cursor()
+        cur.execute(
+            "UPDATE `order` SET razorpay_order_id=%s WHERE id=%s",
+            (razorpay_order['id'], order_id)
+        )
+        mysql.connection.commit()
+        cur.close()
+
+        # Pass order details to template
+        return render_template('payment_page.html',
+                       razorpay_order_id=razorpay_order['id'],
+                       razorpay_key_id=RAZORPAY_KEY_ID,
+                       amount=amount,
+                       order_id=order_id,
+                       username=session['user_name'])
+    return render_template('submit.html')
+
+
+@app.route('/payment_success')
+@login_required
+def payment_success():
+    payment_id = request.args.get('payment_id')
+    order_id = request.args.get('order_id')
+
+    cur = mysql.connection.cursor()
+    cur.execute(
+        "UPDATE `order` SET payment_id=%s, payment_status='Paid' WHERE id=%s",
+        (payment_id, order_id)
+    )
+    mysql.connection.commit()
+    cur.close()
+
+    flash("Payment successful! Your order is confirmed.", "success")
+    return redirect(url_for('dashboard'))
 
 
 
@@ -199,6 +243,8 @@ def logout():
     session.clear()
     flash("You have been logged out.", "info")
     return redirect(url_for('login_page'))
+
+
 
 if __name__ == '__main__':
     app.run(debug=False)

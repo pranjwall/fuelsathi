@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FuelSathi Payment</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+        .payment-container {
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        button {
+            background-color: #3399cc;
+            color: #fff;
+            padding: 12px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #2878a5;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <h2>Hello, {{ username }}!</h2>
+        <p>Your order total is: <strong>₹{{ amount / 100 }}</strong></p>
+        <button id="payButton">🚀 Pay Now</button>
+    </div>
+
+    <script>
+        var options = {
+            "key": "{{ razorpay_key_id }}", // Enter the Key ID generated from Razorpay Dashboard
+            "amount": "{{ amount }}", // Amount is in paise (₹ * 100)
+            "currency": "INR",
+            "name": "FuelSathi",
+            "description": "Fuel Order #{{ order_id }}",
+            "order_id": "{{ razorpay_order_id }}",
+            "handler": function (response){
+                // Redirect to success endpoint
+                window.location.href = "/payment_success?payment_id=" + response.razorpay_payment_id + "&order_id={{ order_id }}";
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+
+        document.getElementById('payButton').onclick = function(e){
+            rzp1.open();
+            e.preventDefault();
+        }
+    </script>
+</body>
+</html>
