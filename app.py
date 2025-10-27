@@ -201,8 +201,8 @@ def submit():
         vehicle_number = request.form['vehicle-number']
         fuel_type = request.form['fuel-type']
 
-        # 💰 1 litre = ₹100
-        amount = litres * 100 * 100  # Razorpay takes amount in paise
+        # 💰 For testing: 1 litre = ₹2
+        amount = litres * 2 * 100  # Razorpay amount in paise
 
         # ✅ Create Razorpay order
         razorpay_order = razorpay_client.order.create(dict(
@@ -238,6 +238,7 @@ def submit():
 
     # On GET, show the form
     return render_template('submit.html')
+
 
 
 
