@@ -3,85 +3,81 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Address Form</title>
+  <title>Fuel Delivery Form</title>
   <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/submit.css') }}"
-    />
+  />
 </head>
 <body>
   <div class="main-center">
     <div class="form-container">
       <img
         src="https://ucarecdn.com/412d5bde-bec7-49c8-94c9-f6df6434ed12/address.png"
-        alt="Address Form Image"
+        alt="Fuel Delivery Form Image"
         class="form-img"
       />
+
+      <!-- ✅ Form now posts to /submit -->
       <form
-        action="https://formbold.com/s/FORM_ID"
+        action="{{ url_for('submit') }}"
         method="POST"
         enctype="multipart/form-data"
       >
         <div style="margin-bottom: 2rem">
-          <h2 class="form-title">Address Form</h2>
+          <h2 class="form-title">Fuel Delivery Request</h2>
           <p class="form-desc">
-            Please provide your address details below. Fields marked with * are required.
+            Please fill out your delivery details below. Fields marked with * are required.
           </p>
         </div>
 
+        <!-- Full Name -->
         <label for="fullname" class="form-label">Full Name*</label>
         <input type="text" name="fullname" id="fullname" class="form-input" placeholder="Enter your full name" required />
 
+        <!-- Email -->
         <label for="email" class="form-label">Email Address*</label>
         <input type="email" name="email" id="email" class="form-input" placeholder="Enter your email" required />
 
-        <label for="phone" class="form-label">Phone Number (Optional)</label>
-        <input type="tel" name="phone" id="phone" class="form-input" placeholder="Enter your phone number" />
+        <!-- Delivery Address -->
+        <label for="address" class="form-label">Delivery Address*</label>
+        <textarea name="address" id="address" class="form-input" placeholder="Enter the full address where fuel should be delivered" rows="3" required></textarea>
 
-        <label for="address-line-1" class="form-label">Street Address (Line 1)*</label>
-        <input type="text" name="address-line-1" id="address-line-1" class="form-input" placeholder="House No., Road Name, etc." required />
+        <!-- Litres -->
+        <label for="litres" class="form-label">Fuel Quantity (Litres)*</label>
+        <input type="number" name="litres" id="litres" class="form-input" placeholder="Enter number of litres" min="1" required />
 
-        <label for="address-line-2" class="form-label">Street Address (Line 2) (Optional)</label>
-        <input type="text" name="address-line-2" id="address-line-2" class="form-input" placeholder="Apartment, Suite, Floor, etc." />
-
-        <label for="city" class="form-label">City / Town*</label>
-        <input type="text" name="city" id="city" class="form-input" placeholder="City or Town" required />
-
-        <label for="state" class="form-label">State / Province / Region*</label>
-        <input type="text" name="state" id="state" class="form-input" placeholder="State, Province, or Region" required />
-
-        <label for="postal-code" class="form-label">Postal / ZIP Code*</label>
-        <input type="text" name="postal-code" id="postal-code" class="form-input" placeholder="Postal or ZIP Code" required />
-
-        <label for="country" class="form-label">Country*</label>
-        <select name="country" id="country" class="form-select" required>
-          <option value="India">India</option>
-          <option value="USA">United States</option>
-          <option value="UK">United Kingdom</option>
-          <option value="Canada">Canada</option>
-          <option value="Australia">Australia</option>
+        <!-- Pump Option -->
+        <label for="pump" class="form-label">Select Pump*</label>
+        <select name="pump" id="pump" class="form-select" required>
+          <option value="">-- Select Pump --</option>
+          <option value="HP">HP</option>
+          <option value="Shell">Shell</option>
+          <option value="Indian Oil">Indian Oil</option>
+          <option value="Reliance">Reliance</option>
         </select>
 
-        <label for="purpose" class="form-label">Purpose of Form (Optional)</label>
-        <select name="purpose" id="purpose" class="form-select">
-          <option value="new-address">New Address</option>
-          <option value="address-update">Address Update</option>
-          <option value="delivery-address">Delivery Address</option>
-          <option value="billing-address">Billing Address</option>
-          <option value="permanent-address">Permanent Address</option>
+        <!-- Vehicle Plate Number -->
+        <label for="vehicle-number" class="form-label">Vehicle Plate Number*</label>
+        <input type="text" name="vehicle-number" id="vehicle-number" class="form-input" placeholder="Enter your vehicle number (e.g., MH12AB1234)" required />
+
+        <!-- Fuel Type -->
+        <label for="fuel-type" class="form-label">Fuel Type*</label>
+        <select name="fuel-type" id="fuel-type" class="form-select" required>
+          <option value="">-- Select Fuel Type --</option>
+          <option value="Petrol">Petrol</option>
+          <option value="Diesel">Diesel</option>
         </select>
 
-        <label for="proof-of-address" class="form-label">Proof of Address (Optional)</label>
-        <input type="file" name="proof-of-address" id="proof-of-address" accept=".pdf,.jpg,.jpeg,.png" class="form-file" />
-
+        <!-- Declaration -->
         <div class="form-checkbox-row">
           <input type="checkbox" id="declaration" class="form-checkbox" required />
           <label for="declaration" class="form-label" style="margin: 0; font-weight: 500">
-            I confirm this address is accurate and updated to the best of my knowledge.
+            I confirm that the details provided are accurate and I agree to the delivery terms.
           </label>
         </div>
 
-        <button class="form-btn">Submit Address</button>
+        <button class="form-btn" type="submit">Submit Request</button>
       </form>
     </div>
   </div>
