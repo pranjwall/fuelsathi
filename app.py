@@ -11,7 +11,7 @@ from flask_mysqldb import MySQL
 from flask_wtf.csrf import CSRFProtect
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
-
+import razorpay
 
 app = Flask(__name__)
 
@@ -38,7 +38,7 @@ csrf = CSRFProtect(app)
 RAZORPAY_KEY_ID = os.environ.get("rzp_live_RY4w5KXS1hsKoq")
 RAZORPAY_KEY_SECRET = os.environ.get("4QrYtwfnbwL1El4AyIHSfCvw")
 
-
+razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
 
 # ---------- LOGIN REQUIRED DECORATOR ----------
 def login_required(f):
@@ -188,27 +188,107 @@ def dashboard():
     return render_template('dashboard.html', username=session['user_name'], orders=orders)
 
 
-#--------------SUBMIT----------
 @app.route('/submit', methods=['GET', 'POST'])
 @login_required
 def submit():
-    form = OrderForm()
-    if form.validate_on_submit():
-        fuel_type = form.fuel_type.data
-        quantity = form.quantity.data
+    if request.method == 'POST':
+        fullname = request.form['fullname']
+        email = request.form['email']
+        address = request.form['address']
+        litres = int(request.form['litres'])
+        pump = request.form['pump']
+        vehicle_number = request.form['vehicle-number']
+        fuel_type = request.form['fuel-type']
 
-        cur = mysql.connection.cursor()
-        cur.execute(
-            "INSERT INTO `order` (user_id, fuel_type, quantity) VALUES (%s, %s, %s)",
-            (session['user_id'], fuel_type, quantity)
+        # 💰 1 litre = ₹100
+        amount = litres * 100 * 100  # Razorpay takes amount in paise
+
+        # ✅ Create Razorpay order
+        razorpay_order = razorpay_client.order.create(dict(
+            amount=amount,
+            currency='INR',
+            payment_capture='1'
+        ))
+
+        order_id = razorpay_order['id']
+
+        # Temporarily store order info in session
+        session['pending_order'] = {
+            'fullname': fullname,
+            'email': email,
+            'address': address,
+            'litres': litres,
+            'pump': pump,
+            'vehicle_number': vehicle_number,
+            'fuel_type': fuel_type,
+            'amount': amount,
+            'razorpay_order_id': order_id
+        }
+
+        # Redirect to payment page
+        return render_template(
+            'payment.html',
+            key_id=RAZORPAY_KEY_ID,
+            amount=amount,
+            order_id=order_id,
+            name=fullname,
+            email=email
         )
+
+    # On GET, show the form
+    return render_template('submit.html')
+
+
+
+@app.route('/payment_success', methods=['POST'])
+@login_required
+def payment_success():
+    data = request.form
+
+    razorpay_order_id = data.get('razorpay_order_id')
+    razorpay_payment_id = data.get('razorpay_payment_id')
+    razorpay_signature = data.get('razorpay_signature')
+
+    # ✅ Verify signature
+    try:
+        razorpay_client.utility.verify_payment_signature({
+            'razorpay_order_id': razorpay_order_id,
+            'razorpay_payment_id': razorpay_payment_id,
+            'razorpay_signature': razorpay_signature
+        })
+    except razorpay.errors.SignatureVerificationError:
+        flash("Payment verification failed!", "danger")
+        return redirect(url_for('dashboard'))
+
+    # ✅ Insert order details into DB
+    order = session.get('pending_order')
+    if order:
+        cur = mysql.connection.cursor()
+        cur.execute("""
+            INSERT INTO `order`
+            (user_id, fullname, email, address, litres, pump, vehicle_number,
+             fuel_type, amount, razorpay_order_id, razorpay_payment_id)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+        """, (
+            session['user_id'],
+            order['fullname'],
+            order['email'],
+            order['address'],
+            order['litres'],
+            order['pump'],
+            order['vehicle_number'],
+            order['fuel_type'],
+            order['amount'] / 100,
+            razorpay_order_id,
+            razorpay_payment_id
+        ))
         mysql.connection.commit()
         cur.close()
 
-        flash("Order submitted successfully!", "success")
-        return redirect(url_for('dashboard'))
+        session.pop('pending_order', None)
+        flash("Payment successful and order placed!", "success")
 
-    return render_template('submit.html', form=form)
+    return redirect(url_for('dashboard'))
 
 
 
