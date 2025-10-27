@@ -35,8 +35,9 @@ app.config['MYSQL_DB'] = os.environ.get('DB_NAME')
 mysql = MySQL(app)
 csrf = CSRFProtect(app)
 
-RAZORPAY_KEY_ID = os.environ.get("rzp_live_RY4w5KXS1hsKoq")
-RAZORPAY_KEY_SECRET = os.environ.get("4QrYtwfnbwL1El4AyIHSfCvw")
+RAZORPAY_KEY_ID = os.environ.get("RAZORPAY_KEY_ID")
+RAZORPAY_KEY_SECRET = os.environ.get("RAZORPAY_KEY_SECRET")
+
 
 razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
 

@@ -20,65 +20,69 @@
 
       <!-- ✅ Form now posts to /submit -->
       <form
-        action="{{ url_for('submit') }}"
-        method="POST"
-        enctype="multipart/form-data"
-      >
-        <div style="margin-bottom: 2rem">
-          <h2 class="form-title">Fuel Delivery Request</h2>
-          <p class="form-desc">
+    action="{{ url_for('submit') }}"
+    method="POST"
+    enctype="multipart/form-data"
+>
+    <!-- CSRF token required by Flask-WTF -->
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <div style="margin-bottom: 2rem">
+        <h2 class="form-title">Fuel Delivery Request</h2>
+        <p class="form-desc">
             Please fill out your delivery details below. Fields marked with * are required.
-          </p>
-        </div>
+        </p>
+    </div>
 
-        <!-- Full Name -->
-        <label for="fullname" class="form-label">Full Name*</label>
-        <input type="text" name="fullname" id="fullname" class="form-input" placeholder="Enter your full name" required />
+    <!-- Full Name -->
+    <label for="fullname" class="form-label">Full Name*</label>
+    <input type="text" name="fullname" id="fullname" class="form-input" placeholder="Enter your full name" required />
 
-        <!-- Email -->
-        <label for="email" class="form-label">Email Address*</label>
-        <input type="email" name="email" id="email" class="form-input" placeholder="Enter your email" required />
+    <!-- Email -->
+    <label for="email" class="form-label">Email Address*</label>
+    <input type="email" name="email" id="email" class="form-input" placeholder="Enter your email" required />
 
-        <!-- Delivery Address -->
-        <label for="address" class="form-label">Delivery Address*</label>
-        <textarea name="address" id="address" class="form-input" placeholder="Enter the full address where fuel should be delivered" rows="3" required></textarea>
+    <!-- Delivery Address -->
+    <label for="address" class="form-label">Delivery Address*</label>
+    <textarea name="address" id="address" class="form-input" placeholder="Enter the full address where fuel should be delivered" rows="3" required></textarea>
 
-        <!-- Litres -->
-        <label for="litres" class="form-label">Fuel Quantity (Litres)*</label>
-        <input type="number" name="litres" id="litres" class="form-input" placeholder="Enter number of litres" min="1" required />
+    <!-- Litres -->
+    <label for="litres" class="form-label">Fuel Quantity (Litres)*</label>
+    <input type="number" name="litres" id="litres" class="form-input" placeholder="Enter number of litres" min="1" required />
 
-        <!-- Pump Option -->
-        <label for="pump" class="form-label">Select Pump*</label>
-        <select name="pump" id="pump" class="form-select" required>
-          <option value="">-- Select Pump --</option>
-          <option value="HP">HP</option>
-          <option value="Shell">Shell</option>
-          <option value="Indian Oil">Indian Oil</option>
-          <option value="Reliance">Reliance</option>
-        </select>
+    <!-- Pump Option -->
+    <label for="pump" class="form-label">Select Pump*</label>
+    <select name="pump" id="pump" class="form-select" required>
+        <option value="">-- Select Pump --</option>
+        <option value="HP">HP</option>
+        <option value="Shell">Shell</option>
+        <option value="Indian Oil">Indian Oil</option>
+        <option value="Reliance">Reliance</option>
+    </select>
 
-        <!-- Vehicle Plate Number -->
-        <label for="vehicle-number" class="form-label">Vehicle Plate Number*</label>
-        <input type="text" name="vehicle-number" id="vehicle-number" class="form-input" placeholder="Enter your vehicle number (e.g., MH12AB1234)" required />
+    <!-- Vehicle Plate Number -->
+    <label for="vehicle-number" class="form-label">Vehicle Plate Number*</label>
+    <input type="text" name="vehicle-number" id="vehicle-number" class="form-input" placeholder="Enter your vehicle number (e.g., MH12AB1234)" required />
 
-        <!-- Fuel Type -->
-        <label for="fuel-type" class="form-label">Fuel Type*</label>
-        <select name="fuel-type" id="fuel-type" class="form-select" required>
-          <option value="">-- Select Fuel Type --</option>
-          <option value="Petrol">Petrol</option>
-          <option value="Diesel">Diesel</option>
-        </select>
+    <!-- Fuel Type -->
+    <label for="fuel-type" class="form-label">Fuel Type*</label>
+    <select name="fuel-type" id="fuel-type" class="form-select" required>
+        <option value="">-- Select Fuel Type --</option>
+        <option value="Petrol">Petrol</option>
+        <option value="Diesel">Diesel</option>
+    </select>
 
-        <!-- Declaration -->
-        <div class="form-checkbox-row">
-          <input type="checkbox" id="declaration" class="form-checkbox" required />
-          <label for="declaration" class="form-label" style="margin: 0; font-weight: 500">
+    <!-- Declaration -->
+    <div class="form-checkbox-row">
+        <input type="checkbox" id="declaration" class="form-checkbox" required />
+        <label for="declaration" class="form-label" style="margin: 0; font-weight: 500">
             I confirm that the details provided are accurate
-          </label>
-        </div>
+        </label>
+    </div>
 
-        <button class="form-btn" type="submit">Submit Request</button>
-      </form>
+    <button class="form-btn" type="submit">Submit Request</button>
+</form>
+
     </div>
   </div>
 </body>
