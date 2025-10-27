@@ -29,20 +29,6 @@ app.config['MYSQL_USER'] = os.environ.get('DB_USER')
 app.config['MYSQL_PASSWORD'] = os.environ.get('DB_PASSWORD')
 app.config['MYSQL_DB'] = os.environ.get('DB_NAME')
 
-import razorpay
-
-client = razorpay.Client(auth=("YOUR_KEY_ID", "YOUR_KEY_SECRET"))
-
-payout = client.payouts.create({
-    "account_number": "YOUR_BANK_ACCOUNT_NUMBER",
-    "fund_account_id": "fa_xxxxx",  # recipient fund account created in Razorpay
-    "amount": 10000,  # in paise (₹100)
-    "currency": "INR",
-    "mode": "IMPS",  # instant transfer
-    "purpose": "payout",
-    "queue_if_low_balance": True
-})
-print(payout)
 
 
 
