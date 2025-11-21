@@ -5,20 +5,37 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 import razorpay
 import pymysql
-import pymysql.cursors   # Required
+import pymysql.cursors
 
 app = Flask(__name__)
 
 # Secret key for session & CSRF
 app.secret_key = 'supersecretkey'
-
 csrf = CSRFProtect(app)
 
-# ---------------------------------------
-#   AIVEN MYSQL — PYMYSQL + SSL CONFIG
-# ---------------------------------------
 
+# ----------------------------------------------------------
+#   SSL CERT: Write Aiven CA certificate to a local file
+# ----------------------------------------------------------
+def create_ca_cert_file():
+    ca_cert = os.environ.get("SSL_CA")
+    if not ca_cert:
+        print("⚠ SSL_CA environment variable missing!")
+        return None
+
+    ca_path = "/tmp/aiven_ca.pem"
+    with open(ca_path, "w") as f:
+        f.write(ca_cert)
+
+    return ca_path
+
+
+# ----------------------------------------------------------
+#   AIVEN MYSQL — PYMYSQL + SSL CONFIG
+# ----------------------------------------------------------
 def get_db():
+    ca_path = create_ca_cert_file()
+
     return pymysql.connect(
         host=os.environ.get("DB_HOST"),
         user=os.environ.get("DB_USER"),
@@ -27,7 +44,8 @@ def get_db():
         port=int(os.environ.get("DB_PORT")),
         cursorclass=pymysql.cursors.DictCursor,
         ssl={
-            "ca": os.environ.get("SSL_CA")
+            "ca": ca_path,
+            "check_hostname": False
         }
     )
 
@@ -35,19 +53,18 @@ def get_db():
 # Razorpay
 RAZORPAY_KEY_ID = os.environ.get("RAZORPAY_KEY_ID")
 RAZORPAY_KEY_SECRET = os.environ.get("RAZORPAY_KEY_SECRET")
-
 razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
 
 
 # ---------- LOGIN REQUIRED DECORATOR ----------
 def login_required(f):
     @wraps(f)
-    def decorated_function(*args, **kwargs):
+    def decorated(*args, **kwargs):
         if 'user_id' not in session:
             flash("Please log in first.", "warning")
             return redirect(url_for('login_page'))
         return f(*args, **kwargs)
-    return decorated_function
+    return decorated
 
 
 from flask_wtf import FlaskForm
@@ -59,10 +76,8 @@ class OrderForm(FlaskForm):
     quantity = IntegerField('Quantity', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
-#-------------------
-#----Normal routs---
-#-------------------
 
+# ------------------- Normal routes -------------------
 @app.route('/house')
 def house():
     return render_template('home.html')
@@ -107,9 +122,6 @@ def payments():
 @login_required
 def settings():
     return render_template('setting.html')
-
-
-# ---------- ROUTES ----------
 
 @app.route('/')
 def home():
@@ -236,6 +248,7 @@ def submit():
     return render_template('submit.html')
 
 
+# ---------- PAYMENT SUCCESS ----------
 @app.route('/payment_success', methods=['POST'])
 @login_required
 def payment_success():
