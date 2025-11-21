@@ -1,42 +1,43 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 import os
-from flask_mysqldb import MySQL
 from flask_wtf.csrf import CSRFProtect
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 import razorpay
+import pymysql
+import pymysql.cursors   # Required
 
 app = Flask(__name__)
 
 # Secret key for session & CSRF
 app.secret_key = 'supersecretkey'
 
-# ---------- MySQL Configuration ----------
-import pymysql
-pymysql.install_as_MySQLdb()
-import pymysql.cursors  # ✅ use PyMySQL cursor classes
-
-app.config['MYSQL_HOST'] = os.environ.get('DB_HOST')
-app.config['MYSQL_USER'] = os.environ.get('DB_USER')
-app.config['MYSQL_PASSWORD'] = os.environ.get('DB_PASSWORD')
-app.config['MYSQL_DB'] = os.environ.get('DB_NAME')
-app.config['MYSQL_PORT'] = int(os.environ.get('DB_PORT'))
-
-# Aiven requires SSL
-app.config['MYSQL_SSL'] = {
-    "ca": "",
-    "cert": "",
-    "key": "",
-    "check_hostname": False
-}
-
-mysql = MySQL(app)
 csrf = CSRFProtect(app)
 
+# ---------------------------------------
+#   AIVEN MYSQL — PYMYSQL + SSL CONFIG
+# ---------------------------------------
+
+def get_db():
+    return pymysql.connect(
+        host=os.environ.get("DB_HOST"),
+        user=os.environ.get("DB_USER"),
+        password=os.environ.get("DB_PASSWORD"),
+        database=os.environ.get("DB_NAME"),
+        port=int(os.environ.get("DB_PORT")),
+        cursorclass=pymysql.cursors.DictCursor,
+        ssl={
+            "ca": os.environ.get("SSL_CA")
+        }
+    )
+
+
+# Razorpay
 RAZORPAY_KEY_ID = os.environ.get("RAZORPAY_KEY_ID")
 RAZORPAY_KEY_SECRET = os.environ.get("RAZORPAY_KEY_SECRET")
 
 razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
+
 
 # ---------- LOGIN REQUIRED DECORATOR ----------
 def login_required(f):
@@ -59,10 +60,9 @@ class OrderForm(FlaskForm):
     submit = SubmitField('Submit')
 
 #-------------------
-#-------------------
 #----Normal routs---
 #-------------------
-#-------------------
+
 @app.route('/house')
 def house():
     return render_template('home.html')
@@ -108,6 +108,7 @@ def payments():
 def settings():
     return render_template('setting.html')
 
+
 # ---------- ROUTES ----------
 
 @app.route('/')
@@ -128,21 +129,24 @@ def register():
 
     hashed_password = generate_password_hash(password)
 
-    cur = mysql.connection.cursor()
+    conn = get_db()
+    cur = conn.cursor()
+
     cur.execute("SELECT * FROM users WHERE email = %s", (email,))
     existing_user = cur.fetchone()
 
     if existing_user:
         flash("Email already registered. Please log in.", "warning")
-        cur.close()
+        conn.close()
         return redirect(url_for('login_page'))
 
     cur.execute(
         "INSERT INTO users (name, email, password_hash) VALUES (%s, %s, %s)",
         (name, email, hashed_password)
     )
-    mysql.connection.commit()
-    cur.close()
+
+    conn.commit()
+    conn.close()
 
     flash("Registration successful! Please log in.", "success")
     return redirect(url_for('login_page'))
@@ -154,11 +158,12 @@ def login():
     email = request.form['email']
     password = request.form['password']
 
-    # ✅ Use PyMySQL DictCursor
-    cur = mysql.connection.cursor(pymysql.cursors.DictCursor)
+    conn = get_db()
+    cur = conn.cursor()
+
     cur.execute("SELECT * FROM users WHERE email = %s", (email,))
     user = cur.fetchone()
-    cur.close()
+    conn.close()
 
     if user and check_password_hash(user['password_hash'], password):
         session['user_id'] = user['id']
@@ -174,10 +179,13 @@ def login():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    cur = mysql.connection.cursor(pymysql.cursors.DictCursor)  # ✅ fixed
+    conn = get_db()
+    cur = conn.cursor()
+
     cur.execute("SELECT * FROM `order` WHERE user_id = %s", (session['user_id'],))
     orders = cur.fetchall()
-    cur.close()
+
+    conn.close()
 
     return render_template('dashboard.html', username=session['user_name'], orders=orders)
 
@@ -249,7 +257,9 @@ def payment_success():
 
     order = session.get('pending_order')
     if order:
-        cur = mysql.connection.cursor()
+        conn = get_db()
+        cur = conn.cursor()
+
         cur.execute("""
             INSERT INTO `order`
             (user_id, fullname, email, address, litres, pump, vehicle_number,
@@ -268,8 +278,9 @@ def payment_success():
             razorpay_order_id,
             razorpay_payment_id
         ))
-        mysql.connection.commit()
-        cur.close()
+
+        conn.commit()
+        conn.close()
 
         session.pop('pending_order', None)
         flash("Payment successful and order placed!", "success")
