@@ -1,60 +1,27 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
-import os
 from flask_wtf.csrf import CSRFProtect
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
-import razorpay
 import pymysql
 import pymysql.cursors
 
 app = Flask(__name__)
 
-# Secret key for session & CSRF
+# Secret key
 app.secret_key = 'supersecretkey'
 csrf = CSRFProtect(app)
 
-
 # ----------------------------------------------------------
-#   SSL CERT: Write Aiven CA certificate to a local file
-# ----------------------------------------------------------
-def create_ca_cert_file():
-    ca_cert = os.environ.get("SSL_CA")
-    if not ca_cert:
-        print("⚠ SSL_CA environment variable missing!")
-        return None
-
-    ca_path = "/tmp/aiven_ca.pem"
-    with open(ca_path, "w") as f:
-        f.write(ca_cert)
-
-    return ca_path
-
-
-# ----------------------------------------------------------
-#   AIVEN MYSQL — PYMYSQL + SSL CONFIG
+#     LOCAL MYSQL DATABASE CONNECTION
 # ----------------------------------------------------------
 def get_db():
-    ca_path = create_ca_cert_file()
-
     return pymysql.connect(
-        host=os.environ.get("DB_HOST"),
-        user=os.environ.get("DB_USER"),
-        password=os.environ.get("DB_PASSWORD"),
-        database=os.environ.get("DB_NAME"),
-        port=int(os.environ.get("DB_PORT")),
-        cursorclass=pymysql.cursors.DictCursor,
-        ssl={
-            "ca": ca_path,
-            "check_hostname": False
-        }
+        host="localhost",
+        user="root",
+        password="Test@123",
+        database="fuelsathi",
+        cursorclass=pymysql.cursors.DictCursor
     )
-
-
-# Razorpay
-RAZORPAY_KEY_ID = os.environ.get("RAZORPAY_KEY_ID")
-RAZORPAY_KEY_SECRET = os.environ.get("RAZORPAY_KEY_SECRET")
-razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
-
 
 # ---------- LOGIN REQUIRED DECORATOR ----------
 def login_required(f):
@@ -65,16 +32,6 @@ def login_required(f):
             return redirect(url_for('login_page'))
         return f(*args, **kwargs)
     return decorated
-
-
-from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, SubmitField
-from wtforms.validators import DataRequired
-
-class OrderForm(FlaskForm):
-    fuel_type = StringField('Fuel Type', validators=[DataRequired()])
-    quantity = IntegerField('Quantity', validators=[DataRequired()])
-    submit = SubmitField('Submit')
 
 
 # ------------------- Normal routes -------------------
@@ -113,15 +70,11 @@ def orders():
 def profile():
     return render_template('profile.html')
 
-@app.route('/payments')
-@login_required
-def payments():
-    return render_template('payment.html')
-
 @app.route('/settings')
 @login_required
 def settings():
     return render_template('setting.html')
+
 
 @app.route('/')
 def home():
@@ -152,10 +105,10 @@ def register():
         conn.close()
         return redirect(url_for('login_page'))
 
-    cur.execute(
-        "INSERT INTO users (name, email, password_hash) VALUES (%s, %s, %s)",
-        (name, email, hashed_password)
-    )
+    cur.execute("""
+        INSERT INTO users (name, email, password_hash)
+        VALUES (%s, %s, %s)
+    """, (name, email, hashed_password))
 
     conn.commit()
     conn.close()
@@ -202,6 +155,7 @@ def dashboard():
     return render_template('dashboard.html', username=session['user_name'], orders=orders)
 
 
+# ---------- SUBMIT ORDER (NO PAYMENT) ----------
 @app.route('/submit', methods=['GET', 'POST'])
 @login_required
 def submit():
@@ -214,91 +168,35 @@ def submit():
         vehicle_number = request.form['vehicle-number']
         fuel_type = request.form['fuel-type']
 
-        amount = litres * 2 * 100  # Razorpay amount in paise
+        amount = litres * 2   # simple amount calculation, no payment
 
-        razorpay_order = razorpay_client.order.create(dict(
-            amount=amount,
-            currency='INR',
-            payment_capture='1'
-        ))
-
-        order_id = razorpay_order['id']
-
-        session['pending_order'] = {
-            'fullname': fullname,
-            'email': email,
-            'address': address,
-            'litres': litres,
-            'pump': pump,
-            'vehicle_number': vehicle_number,
-            'fuel_type': fuel_type,
-            'amount': amount,
-            'razorpay_order_id': order_id
-        }
-
-        return render_template(
-            'payment.html',
-            key_id=RAZORPAY_KEY_ID,
-            amount=amount,
-            order_id=order_id,
-            name=fullname,
-            email=email
-        )
-
-    return render_template('submit.html')
-
-
-# ---------- PAYMENT SUCCESS ----------
-@app.route('/payment_success', methods=['POST'])
-@login_required
-def payment_success():
-    data = request.form
-
-    razorpay_order_id = data.get('razorpay_order_id')
-    razorpay_payment_id = data.get('razorpay_payment_id')
-    razorpay_signature = data.get('razorpay_signature')
-
-    try:
-        razorpay_client.utility.verify_payment_signature({
-            'razorpay_order_id': razorpay_order_id,
-            'razorpay_payment_id': razorpay_payment_id,
-            'razorpay_signature': razorpay_signature
-        })
-    except razorpay.errors.SignatureVerificationError:
-        flash("Payment verification failed!", "danger")
-        return redirect(url_for('dashboard'))
-
-    order = session.get('pending_order')
-    if order:
         conn = get_db()
         cur = conn.cursor()
 
         cur.execute("""
             INSERT INTO `order`
             (user_id, fullname, email, address, litres, pump, vehicle_number,
-             fuel_type, amount, razorpay_order_id, razorpay_payment_id)
-            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+             fuel_type, amount)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
         """, (
             session['user_id'],
-            order['fullname'],
-            order['email'],
-            order['address'],
-            order['litres'],
-            order['pump'],
-            order['vehicle_number'],
-            order['fuel_type'],
-            order['amount'] / 100,
-            razorpay_order_id,
-            razorpay_payment_id
+            fullname,
+            email,
+            address,
+            litres,
+            pump,
+            vehicle_number,
+            fuel_type,
+            amount
         ))
 
         conn.commit()
         conn.close()
 
-        session.pop('pending_order', None)
-        flash("Payment successful and order placed!", "success")
+        flash("Order placed successfully!", "success")
+        return redirect(url_for('dashboard'))
 
-    return redirect(url_for('dashboard'))
+    return render_template('submit.html')
 
 
 # ---------- LOGOUT ----------
@@ -310,4 +208,4 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)
