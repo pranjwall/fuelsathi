@@ -1,11 +1,4 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
-
-# If mysqlclient fails to install on PythonAnywhere, PyMySQL can be used:
-try:
-    import MySQLdb  # try native adapter
-except Exception:
-    import pymysql
-    pymysql.install_as_MySQLdb()
 import os
 from flask_mysqldb import MySQL
 from flask_wtf.csrf import CSRFProtect
@@ -24,13 +17,23 @@ import os
 # ✅ Remote DB config
 import os
 
+# ---------- MySQL Configuration ----------
+import pymysql
+pymysql.install_as_MySQLdb()
+
 app.config['MYSQL_HOST'] = os.environ.get('DB_HOST')
 app.config['MYSQL_USER'] = os.environ.get('DB_USER')
 app.config['MYSQL_PASSWORD'] = os.environ.get('DB_PASSWORD')
 app.config['MYSQL_DB'] = os.environ.get('DB_NAME')
+app.config['MYSQL_PORT'] = int(os.environ.get('DB_PORT', 3306))
 
-
-
+# Aiven requires SSL
+app.config['MYSQL_SSL'] = {
+    "ca": "",
+    "cert": "",
+    "key": "",
+    "check_hostname": False
+}
 
 mysql = MySQL(app)
 csrf = CSRFProtect(app)
