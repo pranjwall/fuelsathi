@@ -12,14 +12,9 @@ app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
 # ---------- MySQL Configuration ----------
-import os
-
-# ✅ Remote DB config
-import os
-
-# ---------- MySQL Configuration ----------
 import pymysql
 pymysql.install_as_MySQLdb()
+import pymysql.cursors  # ✅ use PyMySQL cursor classes
 
 app.config['MYSQL_HOST'] = os.environ.get('DB_HOST')
 app.config['MYSQL_USER'] = os.environ.get('DB_USER')
@@ -40,7 +35,6 @@ csrf = CSRFProtect(app)
 
 RAZORPAY_KEY_ID = os.environ.get("RAZORPAY_KEY_ID")
 RAZORPAY_KEY_SECRET = os.environ.get("RAZORPAY_KEY_SECRET")
-
 
 razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
 
@@ -135,7 +129,6 @@ def register():
     hashed_password = generate_password_hash(password)
 
     cur = mysql.connection.cursor()
-    # Check if user exists
     cur.execute("SELECT * FROM users WHERE email = %s", (email,))
     existing_user = cur.fetchone()
 
@@ -144,7 +137,6 @@ def register():
         cur.close()
         return redirect(url_for('login_page'))
 
-    # Insert new user
     cur.execute(
         "INSERT INTO users (name, email, password_hash) VALUES (%s, %s, %s)",
         (name, email, hashed_password)
@@ -157,36 +149,34 @@ def register():
 
 
 # ---------- LOGIN ----------
-import MySQLdb.cursors  # for DictCursor
-
-# ---------- LOGIN ----------
 @app.route('/login', methods=['POST'])
 def login():
     email = request.form['email']
     password = request.form['password']
 
-    # Use DictCursor to fetch rows as dictionaries
-    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    # ✅ Use PyMySQL DictCursor
+    cur = mysql.connection.cursor(pymysql.cursors.DictCursor)
     cur.execute("SELECT * FROM users WHERE email = %s", (email,))
     user = cur.fetchone()
     cur.close()
 
     if user and check_password_hash(user['password_hash'], password):
         session['user_id'] = user['id']
-        session['user_name'] = user['name']  # Store name in session
+        session['user_name'] = user['name']
         flash("Login successful!", "success")
-        return redirect(url_for('dashboard'))  # ✅ Redirect to dashboard
+        return redirect(url_for('dashboard'))
     else:
         flash("Invalid email or password.", "danger")
         return redirect(url_for('login_page'))
+
 
 # ---------- DASHBOARD ----------
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)  # DictCursor here too
+    cur = mysql.connection.cursor(pymysql.cursors.DictCursor)  # ✅ fixed
     cur.execute("SELECT * FROM `order` WHERE user_id = %s", (session['user_id'],))
-    orders = cur.fetchall()  # now orders will be list of dictionaries
+    orders = cur.fetchall()
     cur.close()
 
     return render_template('dashboard.html', username=session['user_name'], orders=orders)
@@ -204,10 +194,8 @@ def submit():
         vehicle_number = request.form['vehicle-number']
         fuel_type = request.form['fuel-type']
 
-        # 💰 For testing: 1 litre = ₹2
         amount = litres * 2 * 100  # Razorpay amount in paise
 
-        # ✅ Create Razorpay order
         razorpay_order = razorpay_client.order.create(dict(
             amount=amount,
             currency='INR',
@@ -216,7 +204,6 @@ def submit():
 
         order_id = razorpay_order['id']
 
-        # Temporarily store order info in session
         session['pending_order'] = {
             'fullname': fullname,
             'email': email,
@@ -229,7 +216,6 @@ def submit():
             'razorpay_order_id': order_id
         }
 
-        # Redirect to payment page
         return render_template(
             'payment.html',
             key_id=RAZORPAY_KEY_ID,
@@ -239,10 +225,7 @@ def submit():
             email=email
         )
 
-    # On GET, show the form
     return render_template('submit.html')
-
-
 
 
 @app.route('/payment_success', methods=['POST'])
@@ -254,7 +237,6 @@ def payment_success():
     razorpay_payment_id = data.get('razorpay_payment_id')
     razorpay_signature = data.get('razorpay_signature')
 
-    # ✅ Verify signature
     try:
         razorpay_client.utility.verify_payment_signature({
             'razorpay_order_id': razorpay_order_id,
@@ -265,7 +247,6 @@ def payment_success():
         flash("Payment verification failed!", "danger")
         return redirect(url_for('dashboard'))
 
-    # ✅ Insert order details into DB
     order = session.get('pending_order')
     if order:
         cur = mysql.connection.cursor()
@@ -296,8 +277,6 @@ def payment_success():
     return redirect(url_for('dashboard'))
 
 
-
-
 # ---------- LOGOUT ----------
 @app.route('/logout')
 def logout():
@@ -305,7 +284,6 @@ def logout():
     flash("You have been logged out.", "info")
     return redirect(url_for('login_page'))
 
+
 if __name__ == '__main__':
     app.run(debug=False)
-
-
